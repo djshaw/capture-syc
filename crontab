@@ -1,0 +1,10 @@
+MAILTO="derek.shaw@djshaw.ca"
+
+# Grab an image every hour
+0 * * * * /usr/bin/java -cp /home/cerf/djshaw.ca/diving/SYC/:/home/cerf/djshaw.ca/diving/SYC/sunrisesunsetlib.jar Main && /usr/bin/python /home/cerf/djshaw.ca/diving/SYC/syc.py
+
+# Delete files older than 7 days
+# TODO: don't delete the newest file (for when the webcam is shutdown in the
+# winter and we proactively delete identical file)
+0 0 * * * /usr/bin/find /home/cerf/djshaw.ca/diving/SYC/ -type f -iname "*.jpg" -mtime +7 -execdir rm -- '{}' \;
+
