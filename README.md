@@ -22,4 +22,4 @@ docker build . --tag capture-syc
 
 ## TODO List
 
-[ ] remove syc.py.  It can be replaced with the right `wget -O $(TZ=America/Toronto date %Y-%m-%d-%h).jpg ...`
+- [ ] remove syc.py.  It can be replaced with the right `wget -O $(TZ=America/Toronto date %Y-%m-%d-%h).jpg ...`
