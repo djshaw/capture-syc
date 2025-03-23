@@ -22,15 +22,17 @@ def main( args ):
         # TODO: delete the downloaded file if it's empty
         # TODO: delete the downloaded file if it's the same as the previously
         # downloaded file (the webcam stops updating at night)
-    d = os.path.dirname( os.path.abspath( inspect.getfile( inspect.currentframe() ) ) )
     filename = "%04d-%02d-%02d-%02d.jpg" % (now.year, now.month, now.day, now.hour)
     p = subprocess.Popen( [ "wget",
                             "http://sarniayachtclub.ca/webcam/FI9900P_C4D6554097B7/snap/webcam_1.jpg",
-                            "-O", os.path.join( d, filename ) ],
+                            "-O", filename ],
                           stdout=subprocess.PIPE,
                           stderr=subprocess.PIPE )
     p.communicate()
     p.wait()
+
+    return p.returncode
+    # TODO: check if the file is empty or invalid
 
 if __name__ == '__main__':
     sys.exit( main( sys.argv ) )

@@ -3,7 +3,7 @@
 ## Building
 
 ```shell
-docker build .
+docker build . --tag capture-syc
 ```
 
 ## Running
