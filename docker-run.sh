@@ -23,5 +23,7 @@ fi
 
 mkdir --parent $OUTPUT
 
-docker run --volume $SCRIPT_DIR/output:/output:rw \
+docker run --rm \
+	   --volume $SCRIPT_DIR/output:/output:rw \
            capture-syc
+

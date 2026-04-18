@@ -1,14 +1,8 @@
 {
 	"name": "capture-syc",
-	"image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
 	"features": {
-		"ghcr.io/devcontainers/features/java:1": {
-			"version": "none",
-			"installMaven": "false",
-			"installGradle": "false"
-		},
 	 	"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-	},
-	"postCreateCommand": "./.devcontainer/postCreateCommand.sh"
+	}
 }
