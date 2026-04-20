@@ -5,9 +5,11 @@ set -o pipefail
 set -u
 set -x
 
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
 # TODO: find a more canonical way to determine if we're in a dev container
 if [[ -d /home/vscode ]]; then
-    ROOT=/workspaces/capture-syc
+    ROOT="$SCRIPT_DIR"
 else
     ROOT=/app
     OUTPUT=${OUTPUT:-/output}
@@ -23,7 +25,7 @@ RESPONSE=$(curl --silent --fail "https://api.open-meteo.com/v1/forecast?latitude
 SUNRISE=$(echo "$RESPONSE" | jq --raw-output '.daily.sunrise[0]')
 SUNSET=$(echo  "$RESPONSE" | jq --raw-output '.daily.sunset[0]')
 
-# Expand window by 1 hour on each side (matching original behaviour)
+# Expand window by 1 hour on each side
 SUNRISE_EPOCH=$(date -d "$SUNRISE - 1 hour" +%s)
 SUNSET_EPOCH=$(date  -d "$SUNSET + 1 hour"  +%s)
 NOW_EPOCH=$(date +%s)
@@ -38,4 +40,4 @@ FILENAME="$OUTPUT/$(date +"%Y-%m-%d-%H").jpg"
 curl --silent \
      --fail \
      --output "$FILENAME" \
-     "http://sarniayachtclub.ca/webcam/FI9900P_C4D6554097B7/snap/webcam_1.jpg" \
+     "http://sarniayachtclub.ca/webcam/FI9900P_C4D6554097B7/snap/webcam_1.jpg"

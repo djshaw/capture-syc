@@ -3,7 +3,7 @@
 set -o pipefail
 set -u
 
-SCRIPT="$(dirname "$0")/run.sh"
+SCRIPT="$(dirname "$(realpath "$0")")/run.sh"
 
 PASS=0
 FAIL=0

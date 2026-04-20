@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$(realpath "$0")")/.." && pwd)"
+
+"$REPO_ROOT/test-run.sh"
+
+GLOBAL_HOOKS_PATH="$(git config --global core.hooksPath 2>/dev/null || true)"
+if [[ -n "$GLOBAL_HOOKS_PATH" ]]; then
+    GLOBAL_HOOKS_PATH="${GLOBAL_HOOKS_PATH/#\~/$HOME}"
+    GLOBAL_HOOK="$GLOBAL_HOOKS_PATH/pre-push"
+    if [[ -x "$GLOBAL_HOOK" ]]; then
+        "$GLOBAL_HOOK" "$@"
+    fi
+fi
