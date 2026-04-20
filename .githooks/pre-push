@@ -4,6 +4,12 @@ set -e
 
 REPO_ROOT="$(cd "$(dirname "$(realpath "$0")")/.." && pwd)"
 
+# Capture git's push refs from stdin before running anything else,
+# so the data is available to pass to the global hook after our tests run.
+STDIN_FILE="$(mktemp)"
+trap 'rm -f "$STDIN_FILE"' EXIT
+cat > "$STDIN_FILE"
+
 "$REPO_ROOT/test-run.sh"
 
 GLOBAL_HOOKS_PATH="$(git config --global core.hooksPath 2>/dev/null || true)"
@@ -11,6 +17,6 @@ if [[ -n "$GLOBAL_HOOKS_PATH" ]]; then
     GLOBAL_HOOKS_PATH="${GLOBAL_HOOKS_PATH/#\~/$HOME}"
     GLOBAL_HOOK="$GLOBAL_HOOKS_PATH/pre-push"
     if [[ -x "$GLOBAL_HOOK" ]]; then
-        "$GLOBAL_HOOK" "$@" < /dev/stdin
+        "$GLOBAL_HOOK" "$@" < "$STDIN_FILE"
     fi
 fi
