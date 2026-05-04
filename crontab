@@ -1,7 +1,7 @@
 MAILTO="derek.shaw@djshaw.ca"
 
 # Grab an image every hour
-0 * * * * /app/run.sh
+0 * * * * OUTPUT=/home/cerf/djshaw.ca/diving/SYC /home/cerf/mygit/capture-syc/run.sh
 
 # Delete files older than 7 days
 # TODO: don't delete the newest file (for when the webcam is shutdown in the
