@@ -3,7 +3,6 @@
 set -e
 set -o pipefail
 set -u
-set -x
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
