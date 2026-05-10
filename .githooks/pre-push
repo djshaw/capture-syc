@@ -11,6 +11,7 @@ trap 'rm -f "$STDIN_FILE"' EXIT
 cat > "$STDIN_FILE"
 
 "$REPO_ROOT/test-run.sh"
+"$REPO_ROOT/test-prune-old-images.sh"
 
 GLOBAL_HOOKS_PATH="$(git config --global core.hooksPath 2>/dev/null || true)"
 if [[ -n "$GLOBAL_HOOKS_PATH" ]]; then

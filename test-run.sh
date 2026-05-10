@@ -15,6 +15,8 @@ setup() {
     MOCK_DIR="$(mktemp --directory)"
     OUTPUT_DIR="$(mktemp --directory)"
     export OUTPUT="$OUTPUT_DIR"
+    unset MOCK_CURL_EXIT_CODE
+    unset MOCK_IMAGE_CONTENT
 
     local mock_sunrise="2026-04-18T06:30"
     local mock_sunset="2026-04-18T20:15"
@@ -48,7 +50,7 @@ elif [[ "$*" == *"--output"* ]]; then
     prev=""
     for arg in "$@"; do
         if [[ "$prev" == "--output" ]]; then
-            touch "$arg"
+            echo "${MOCK_IMAGE_CONTENT:-default_image_content}" > "$arg"
             break
         fi
         prev="$arg"
@@ -142,13 +144,34 @@ test_fails_when_api_unavailable() {
     [[ $status -ne 0 ]]
 }
 
+test_deletes_duplicate_image() {
+    export MOCK_NOW_EPOCH="$DAYTIME_EPOCH"
+    export MOCK_IMAGE_CONTENT="same_content"
+    echo "same_content" > "$OUTPUT_DIR/2026-01-01-01.jpg"
+    bash "$SCRIPT" >/dev/null 2>&1
+    local count
+    count=$(find "$OUTPUT_DIR" -name '*.jpg' | wc --lines)
+    [[ $count -eq 1 ]]
+}
+
+test_keeps_unique_image() {
+    export MOCK_NOW_EPOCH="$DAYTIME_EPOCH"
+    export MOCK_IMAGE_CONTENT="new_unique_content"
+    echo "different_content" > "$OUTPUT_DIR/2026-01-01-01.jpg"
+    bash "$SCRIPT" >/dev/null 2>&1
+    local count
+    count=$(find "$OUTPUT_DIR" -name '*.jpg' | wc --lines)
+    [[ $count -eq 2 ]]
+}
+
 run_test "creates output directory when it does not exist" test_creates_output_directory
 run_test "exits 0 and downloads no image before the daylight window"  test_no_download_before_window
 run_test "exits 0 and downloads no image after the daylight window"   test_no_download_after_window
 run_test "downloads exactly one image during the daylight window"      test_downloads_one_image_during_window
 run_test "image filename matches YYYY-MM-DD-HH.jpg format"            test_image_filename_format
-run_test "fails with non-zero exit when the API call fails"            test_fails_when_api_unavailable
-
+run_test "fails with non-zero exit when the API call fails"           test_fails_when_api_unavailable
+run_test "deletes new image when it is a duplicate of an existing one" test_deletes_duplicate_image
+run_test "keeps new image when its content differs from all existing"  test_keeps_unique_image
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
 [[ $FAIL -eq 0 ]]

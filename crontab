@@ -3,8 +3,7 @@ MAILTO="derek.shaw@djshaw.ca"
 # Grab an image every hour
 0 * * * * OUTPUT=/home/cerf/djshaw.ca/diving/SYC /home/cerf/mygit/capture-syc/run.sh
 
-# Delete files older than 7 days
-# TODO: don't delete the newest file (for when the webcam is shutdown in the
-# winter and we proactively delete identical file)
-0 0 * * * /usr/bin/find /home/cerf/djshaw.ca/diving/SYC/ -type f -iname "*.jpg" -mtime +7 -execdir rm -- '{}' \;
+# Retain the newest 7 image days based on filename day (YYYY-MM-DD), even
+# when some calendar days are missing.
+0 0 * * * /app/prune-old-images.sh /home/cerf/djshaw.ca/diving/SYC/ 7
 

@@ -41,3 +41,13 @@ curl --silent \
      --fail \
      --output "$FILENAME" \
      "http://sarniayachtclub.ca/webcam/FI9900P_C4D6554097B7/snap/webcam_1.jpg"
+
+# Delete the new file if its content is identical to any existing image,
+# keeping the older copy so the original capture timestamp is preserved.
+NEW_HASH=$(sha256sum "$FILENAME" | cut --delimiter=' ' --fields=1)
+DUPLICATE=$(find "$OUTPUT" -type f -iname "*.jpg" ! -name "$(basename "$FILENAME")" \
+    -exec sha256sum '{}' \; \
+    | awk -v hash="$NEW_HASH" '$1 == hash { print $2; exit }')
+if [[ -n "$DUPLICATE" ]]; then
+    rm "$FILENAME"
+fi

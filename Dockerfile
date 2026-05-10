@@ -10,6 +10,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && mkdir /app \
  && mkdir /output
 
-COPY run.sh /app/
+COPY run.sh prune-old-images.sh /app/
 WORKDIR /app
 ENTRYPOINT ["/app/run.sh"]
