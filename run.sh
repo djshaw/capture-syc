@@ -36,9 +36,9 @@ fi
 
 # Download webcam snapshot named by current hour
 FILENAME="$OUTPUT/$(date +"%Y-%m-%d-%H").jpg"
-curl --silent \
-     --fail \
+curl --fail \
      --output "$FILENAME" \
+     --header 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36' \
      "http://sarniayachtclub.ca/webcam/FI9900P_C4D6554097B7/snap/webcam_1.jpg"
 
 # Delete the new file if its content is identical to any existing image,
